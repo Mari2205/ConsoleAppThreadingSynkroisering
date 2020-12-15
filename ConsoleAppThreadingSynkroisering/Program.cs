@@ -10,16 +10,27 @@ namespace ConsoleAppThreadingSynkroisering
     {
         static int count = 0;
         static object beton = new object();
+        static int numberOfChar = 0;
         static void Main(string[] args)
         {
-            Thread threadUP = new Thread(CountUp);
-            Thread threadDown = new Thread(CountDown);
+            #region opg 1
+            //Thread threadUP = new Thread(CountUp);
+            //Thread threadDown = new Thread(CountDown);
 
 
-            threadUP.Start();
-            //Thread.Sleep(500);
-            threadDown.Start();
+            //threadUP.Start();
+            ////Thread.Sleep(500);
+            //threadDown.Start();
+            #endregion
 
+            #region opg 2,3
+            Thread threadStar = new Thread(SixtyChars);
+            Thread threadHashtag = new Thread(SixtyChars);
+
+            threadStar.Start('*');
+            Thread.Sleep(100);
+            threadHashtag.Start('#');
+            #endregion
 
             Console.ReadKey();
         }
@@ -62,6 +73,29 @@ namespace ConsoleAppThreadingSynkroisering
             finally
             {
                 Monitor.Exit(beton);
+            }
+        }
+
+        static void SixtyChars(object _char)
+        {
+            while (true)
+            {
+                Thread.Sleep(500);
+                Monitor.Enter(beton);
+                try
+                {
+                    for (int i = 0; i < 60; i++)
+                    {
+                        numberOfChar++;
+                        Console.Write(_char);
+
+                    }
+                    Console.WriteLine(numberOfChar);
+                }
+                finally
+                {
+                    Monitor.Exit(beton);
+                }
             }
         }
     }
